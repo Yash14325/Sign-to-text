@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 # Set working directory
-WORKDIR /sign-translator
+WORKDIR /app
 
 # Copy all files to the container
 COPY . .
@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt
 EXPOSE 10000
 
 # Start your Flask app
-CMD ["python", "app.py"]
+CMD ["python", "sign-translator/app.py"]
