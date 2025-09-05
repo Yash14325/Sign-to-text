@@ -1,7 +1,8 @@
+python-3.10.12
 flask
 numpy
 opencv-python-headless
 pillow
 tensorflow
 mediapipe
-python-3.10.12
+
