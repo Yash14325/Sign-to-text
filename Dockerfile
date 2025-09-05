@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /sign-translator
 
 # Copy all files to the container
 COPY . .
