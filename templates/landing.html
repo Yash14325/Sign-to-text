@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Recognition - Welcome</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <header class="text-white text-center py-5" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+            <h1>SIGN LANGUAGE RECOGNITION</h1>
+            <p class="lead mt-3" style="color: var(--neutral-light);">Converting sign language to text and speech in real-time</p>
+        </header>
+        
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary);">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/"><i class="fas fa-home-alt"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/detection"><i class="fas fa-camera"></i> Detection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/learn"><i class="fas fa-hands"></i> Learn Signs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/test"><i class="fas fa-clipboard-check"></i> Test Yourself</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container mt-5">
+            <!-- Hero Section -->
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6">
+                    <h2 class="display-4 fw-bold" style="color: var(--primary-dark);">Breaking Communication Barriers</h2>
+                    <p class="lead my-4">Our sign language recognition system uses advanced computer vision and machine learning to translate sign language into text and speech in real-time.</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <a href="/detection" class="btn btn-lg px-4 me-md-2" style="background-color: var(--primary); color: white;">
+                            <i class="fas fa-play me-2"></i>Try It Now
+                        </a>
+                        <a href="/learn" class="btn btn-lg px-4" style="background-color: var(--neutral-light); color: var(--primary-dark);">
+                            <i class="fas fa-book me-2"></i>Learn Signs
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0 text-center">
+                    <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="Sign Language Recognition" class="img-fluid rounded shadow" style="max-height: 400px;">
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="row mt-5 pt-5 border-top">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="fw-bold" style="color: var(--primary-dark);">Key Features</h2>
+                    <p class="lead">Discover what makes our sign language recognition system unique</p>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow feature-card">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-4">
+                                <i class="fas fa-camera fa-3x" style="color: var(--primary);"></i>
+                            </div>
+                            <h3 class="card-title fw-bold">Real-time Recognition</h3>
+                            <p class="card-text">Instantly recognize sign language gestures through your webcam with high accuracy.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow feature-card">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-4">
+                                <i class="fas fa-volume-high fa-3x" style="color: var(--primary);"></i>
+                            </div>
+                            <h3 class="card-title fw-bold">Text-to-Speech</h3>
+                            <p class="card-text">Convert recognized signs into spoken words, enabling seamless communication.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow feature-card">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-4">
+                                <i class="fas fa-lightbulb fa-3x" style="color: var(--primary);"></i>
+                            </div>
+                            <h3 class="card-title fw-bold">Smart Suggestions</h3>
+                            <p class="card-text">Get intelligent word suggestions to improve accuracy and speed of communication.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="row mt-5 pt-5 border-top">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="fw-bold" style="color: var(--primary-dark);">How It Works</h2>
+                    <p class="lead">Our system uses a simple three-step process</p>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body p-4">
+                            <div class="step-number mb-3" style="background-color: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                            <h3 class="card-title fw-bold">Capture</h3>
+                            <p class="card-text">Your webcam captures hand gestures in real-time, which are then processed by our system.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body p-4">
+                            <div class="step-number mb-3" style="background-color: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                            <h3 class="card-title fw-bold">Recognize</h3>
+                            <p class="card-text">Our AI model analyzes the hand positions and gestures to recognize the corresponding signs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body p-4">
+                            <div class="step-number mb-3" style="background-color: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                            <h3 class="card-title fw-bold">Translate</h3>
+                            <p class="card-text">The recognized signs are converted into text and can be spoken aloud using text-to-speech technology.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="row mt-5 py-5 text-center" style="background-color: var(--neutral-light); border-radius: 16px;">
+                <div class="col-12">
+                    <h2 class="fw-bold" style="color: var(--primary-dark);">Ready to Try It Out?</h2>
+                    <p class="lead mb-4">Experience the power of our sign language recognition system firsthand.</p>
+                    <a href="/detection" class="btn btn-lg px-5 py-3" style="background-color: var(--primary); color: white;">
+                        <i class="fas fa-camera me-2"></i>Go to Detection Page
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center py-4 mt-5" style="background-color: var(--neutral-dark); color: var(--neutral-light);">
+            <div class="container">
+                <p class="mb-1">Sign Language To Text and Speech Conversion</p>
+                <p class="small mb-0">Bridging communication gaps through technology</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+/* Main Styles for Sign Language Conversion App */
+
+:root {
+    /* Modern Color Palette */
+    --primary: #4361ee;       /* Softer blue as primary */
+    --primary-light: #4895ef; /* Light blue variant */
+    --primary-dark: #3a0ca3;  /* Dark blue/purple for contrast */
+    --accent: #f72585;        /* Vibrant pink accent */
+    --accent-light: #ff9e00;  /* Warm orange accent */
+    --neutral-dark: #2b2d42;  /* Dark slate for text */
+    --neutral-medium: #8d99ae; /* Medium gray for secondary text */
+    --neutral-light: #edf2f4; /* Light gray for backgrounds */
+    --success: #4cc9a0;       /* Soft green for success states */
+    --warning: #ffb703;       /* Amber for warnings */
+    --danger: #e63946;        /* Soft red for errors/danger */
+    --shadow: rgba(0, 0, 0, 0.1); /* Consistent shadow color */
+}
+
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--neutral-light);
+    color: var(--neutral-dark);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
+}
+
+h1 {
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+h3 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+h4 {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--neutral-dark);
+}
+
+h5 {
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+
+p, li {
+    line-height: 1.6;
+    color: var(--neutral-medium);
+}
+
+strong {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+/* Header Styles */
+header h1 {
+    font-weight: 800;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    letter-spacing: 2px;
+}
+
+/* Card Styles */
+.card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px var(--shadow);
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+}
+
+.card-header h3 {
+    margin-bottom: 0;
+    font-size: 1.4rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Video and Image Containers */
+#webcam {
+    height: 400px;
+    object-fit: cover;
+    background-color: var(--neutral-dark);
+    border-radius: 0 0 16px 16px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-body.p-0 {
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+}
+
+#processed-image {
+    max-height: 380px;
+    max-width: 100%;
+    display: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+#no-hand-message {
+    display: block;
+    padding: 2rem;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Text Display Areas */
+.min-height-100 {
+    min-height: 100px;
+}
+
+#sentence {
+    word-wrap: break-word;
+    min-height: 120px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#current-character {
+    font-size: 4rem;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(67, 97, 238, 0.1);
+    border-radius: 16px;
+    color: var(--primary);
+    box-shadow: inset 0 0 10px rgba(67, 97, 238, 0.05), 0 4px 15px rgba(67, 97, 238, 0.1);
+    transition: all 0.3s ease;
+}
+
+#current-character:hover {
+    box-shadow: inset 0 0 15px rgba(67, 97, 238, 0.1), 0 8px 20px rgba(67, 97, 238, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Buttons and Interactive Elements */
+.btn {
+    border-radius: 12px;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px var(--shadow);
+}
+
+/* Suggestion Buttons */
+.suggestions-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.suggestion-btn {
+    font-size: 1.2rem;
+    min-width: 120px;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    border-width: 2px;
+    position: relative;
+    overflow: hidden;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.suggestion-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
+.suggestion-btn:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+/* Container Spacing */
+.container {
+    max-width: 1200px;
+    padding: 0 1.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.mt-5 {
+    margin-top: 3rem !important;
+}
+
+/* Grid System Refinements */
+.gx-4 {
+    --bs-gutter-x: 2rem;
+}
+
+.gy-4 {
+    --bs-gutter-y: 2rem;
+}
+
+.gy-3 {
+    --bs-gutter-y: 1.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    #webcam, #processed-image-container {
+        height: 300px;
+    }
+    
+    #current-character {
+        font-size: 3rem;
+        height: 80px;
+    }
+    
+    .suggestion-btn {
+        font-size: 1rem;
+        min-width: 100px;
+    }
+    
+    .container {
+        padding: 0 1.25rem;
+    }
+    
+    .gx-4 {
+        --bs-gutter-x: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #webcam, #processed-image-container {
+        height: 250px;
+    }
+    
+    #sentence {
+        min-height: 80px;
+    }
+    
+    .suggestion-btn {
+        min-width: 80px;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .gx-4 {
+        --bs-gutter-x: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem !important;
+    }
+}
+
+/* Animations and Micro-interactions */
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7);
+    }
+    
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(67, 97, 238, 0);
+    }
+    
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(67, 97, 238, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.spinner-border {
+    animation: spinner-border 0.75s linear infinite, pulse 2s infinite;
+}
+
+/* Apply animations to elements */
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.suggestion-btn {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.nav-item {
+    animation: slideIn 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.nav-item:nth-child(1) { animation-delay: 0.1s; }
+.nav-item:nth-child(2) { animation-delay: 0.2s; }
+.nav-item:nth-child(3) { animation-delay: 0.3s; }
+
+/* Hover effects for icons */
+.fas {
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .fas, 
+.nav-link:hover .fas,
+h5:hover .fas {
+    transform: scale(1.2);
+}
+
+/* Landing Page Styles */
+.feature-card {
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.2);
+}
+
+.step-number {
+    transition: all 0.3s ease;
+}
+
+.card:hover .step-number {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+}
+
+/* Footer Styles */
+footer {
+    margin-top: 2rem;
+    background-color: var(--neutral-dark) !important;
+    color: var(--neutral-light);
+    padding: 1.5rem 0;
+}

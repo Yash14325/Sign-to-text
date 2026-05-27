@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Recognition</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <header class="text-white text-center py-4" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+            <h1>SIGN LANGUAGE RECOGNITION</h1>
+        </header>
+        
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary);">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/"><i class="fas fa-home-alt"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/detection"><i class="fas fa-camera"></i> Detection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/learn"><i class="fas fa-hands"></i> Learn Signs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/test"><i class="fas fa-clipboard-check"></i> Test Yourself</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container mt-5">
+            <div class="row gx-4 gy-4">
+                <!-- Webcam Feed Column -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header text-white d-flex justify-content-between align-items-center" style="background: linear-gradient(to right, var(--primary), var(--primary-light)); border-bottom: none;">
+                            <h3 class="mb-0">Webcam Feed</h3>
+                            <button id="camera-toggle" class="btn" style="background-color: var(--neutral-light); color: var(--primary-dark); border-radius: 12px;">
+                                <i class="fas fa-video"></i> <span id="camera-toggle-text">Stop Camera</span>
+                            </button>
+                        </div>
+                        <div class="card-body p-0 position-relative">
+                            <video id="webcam" class="w-100" autoplay playsinline></video>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Processed Hand Column -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header text-white" style="background: linear-gradient(to right, var(--primary), var(--primary-light)); border-bottom: none;">
+                            <h3 class="mb-0">Processed Hand</h3>
+                        </div>
+                        <div class="card-body p-0 d-flex justify-content-center align-items-center" style="height: 400px;">
+                            <img id="processed-image" class="img-fluid" src="" alt="Processed hand will appear here">
+                            <div id="no-hand-message" class="text-center text-muted">
+                                <i class="fas fa-hand fa-4x mb-3" style="color: var(--neutral-medium);"></i>
+                                <p>Show your hand in the webcam to start</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recognition Results Row -->
+            <div class="row gx-4 mt-5">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">Recognition Results</h3>
+                            <div>
+                                <button id="speak-btn" class="btn me-2" style="background-color: var(--neutral-light); color: var(--primary-dark); border-radius: 12px;">
+                                    <i class="fas fa-volume-high"></i> Speak
+                                </button>
+                                <button id="clear-btn" class="btn" style="background-color: var(--neutral-light); color: var(--primary-dark); border-radius: 12px;">
+                                    <i class="fas fa-trash-can"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row gx-4 gy-4 mb-4">
+                                <div class="col-md-3">
+                                    <h4>Current Character:</h4>
+                                    <div id="current-character" class="display-1 text-center fw-bold" style="color: var(--primary);">-</div>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4>Sentence:</h4>
+                                    <div id="sentence" class="p-4 border rounded fs-4 min-height-100" style="background-color: var(--neutral-light); border-color: var(--neutral-medium) !important; border-radius: 12px; font-family: 'Segoe UI', sans-serif; line-height: 1.6;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row gx-4 gy-3">
+                                <div class="col-12">
+                                    <h4 style="color: var(--accent); font-weight: 600; margin-top: 0.5rem;">Suggestions:</h4>
+                                    <div class="suggestions-wrapper mt-3" id="suggestions-container">
+                                        <button class="btn suggestion-btn" style="border-color: var(--primary); color: var(--primary);" data-index="0">-</button>
+                                        <button class="btn suggestion-btn" style="border-color: var(--primary); color: var(--primary);" data-index="1">-</button>
+                                        <button class="btn suggestion-btn" style="border-color: var(--primary); color: var(--primary);" data-index="2">-</button>
+                                        <button class="btn suggestion-btn" style="border-color: var(--primary); color: var(--primary);" data-index="3">-</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions Row -->
+            <div class="row gx-4 mt-5 mb-5">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">Instructions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-circle-info" style="color: var(--primary);"></i> Basic Usage:</h5>
+                                    <ul>
+                                        <li>Position your hand clearly in the webcam view</li>
+                                        <li>Make sign language gestures to see them recognized</li>
+                                        <li>Use the suggestions to correct or complete words</li>
+                                        <li>Click "Speak" to hear the sentence spoken aloud</li>
+                                        <li>Click "Clear" to start a new sentence</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-hand" style="color: var(--primary);"></i> Special Gestures:</h5>
+                                    <ul>
+                                        <li><strong>Space:</strong> Special hand position to add a space</li>
+                                        <li><strong>Backspace:</strong> Special hand position to delete the last character</li>
+                                        <li><strong>Next:</strong> Special hand position to confirm a character</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center py-3" style="background-color: var(--neutral-dark); color: var(--neutral-light);">
+            <p class="mb-0">Sign Language To Text and Speech Conversion</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

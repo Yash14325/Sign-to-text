@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Your Sign Language Knowledge</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .sign-image {
+            max-height: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+        .feedback {
+            height: 50px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .correct-feedback {
+            color: #198754;
+        }
+        .incorrect-feedback {
+            color: #dc3545;
+        }
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <header class="bg-primary text-white text-center py-4">
+            <h1>SIGN LANGUAGE RECOGNITION</h1>
+        </header>
+        
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/"><i class="fas fa-home-alt"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/detection"><i class="fas fa-camera"></i> Detection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/learn"><i class="fas fa-hands"></i> Learn Signs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/test"><i class="fas fa-clipboard-check"></i> Test Yourself</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container mt-4">
+            <div class="test-container">
+                <h2 class="text-center mb-4">Test Your Knowledge</h2>
+                
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <div class="score-display">Score: <span id="score">0</span></div>
+                        
+                        <img id="sign-to-guess" class="sign-image" src="" alt="Sign to guess">
+                        
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" id="answer-input" class="form-control" placeholder="Type your answer...">
+                                    <button id="submit-btn" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback" id="feedback"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button id="next-btn" class="btn btn-success">Next Sign</button>
+                    <button id="reset-btn" class="btn btn-danger ms-2">Reset Score</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-primary text-white text-center py-3 mt-5">
+            <p>© 2023 Sign Language Recognition</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let currentSign = '';
+        let score = 0;
+        
+        // DOM elements
+        const signImage = document.getElementById('sign-to-guess');
+        const answerInput = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const feedbackElement = document.getElementById('feedback');
+        const scoreElement = document.getElementById('score');
+        
+        // Load score from localStorage if available
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedScore = localStorage.getItem('signLanguageScore');
+            if (savedScore) {
+                score = parseInt(savedScore);
+                scoreElement.textContent = score;
+            }
+            loadRandomSign();
+        });
+        
+        // Load a random sign
+        function loadRandomSign() {
+            // Get all available signs (A-Z)
+            const signs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            const randomIndex = Math.floor(Math.random() * signs.length);
+            currentSign = signs[randomIndex];
+            
+            // Set the image source - using the correct path to the signs directory
+            signImage.src = `/signs/${currentSign}.png`;
+            
+            // Clear previous feedback and input
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            answerInput.value = '';
+            answerInput.focus();
+        }
+        
+        // Check the answer
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toUpperCase();
+            
+            if (userAnswer === currentSign) {
+                // Correct answer
+                feedbackElement.textContent = 'Correct! 🎉';
+                feedbackElement.className = 'feedback correct-feedback';
+                score++;
+                scoreElement.textContent = score;
+                localStorage.setItem('signLanguageScore', score);
+            } else {
+                // Incorrect answer
+                feedbackElement.textContent = `Incorrect. The correct answer is ${currentSign}.`;
+                feedbackElement.className = 'feedback incorrect-feedback';
+            }
+        }
+        
+        // Event listeners
+        submitBtn.addEventListener('click', checkAnswer);
+        
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        nextBtn.addEventListener('click', loadRandomSign);
+        
+        resetBtn.addEventListener('click', () => {
+            score = 0;
+            scoreElement.textContent = score;
+            localStorage.setItem('signLanguageScore', score);
+            loadRandomSign();
+        });
+    </script>
+</body>
+</html>
