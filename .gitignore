@@ -1,2 +1,4 @@
 .gitignore
 venv39
+.venv/
+__pycache__/

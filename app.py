@@ -27,7 +27,15 @@ hd = HandDetector(maxHands=1, detectionCon=0.6)
 hd2 = HandDetector(maxHands=1, detectionCon=0.6)
 
 # Initialize dictionary for spell checking
-ddd = enchant.Dict("en-US")
+try:
+    ddd = enchant.Dict("en-US")
+except enchant.errors.DictNotFoundError:
+    try:
+        ddd = enchant.Dict("en_US")
+    except enchant.errors.DictNotFoundError:
+        ddd = None
+except Exception:
+    ddd = None
 
 # Set offset for hand detection
 offset = 29
@@ -71,6 +79,27 @@ word4 = " "
 def distance(x, y):
     return math.sqrt(((x[0] - y[0]) ** 2) + ((x[1] - y[1]) ** 2))
 
+def get_first_hand(detection_result):
+    """Return the first hand dict from either cvzone return format."""
+    if not detection_result:
+        return None
+
+    hands = detection_result
+    if isinstance(detection_result, tuple):
+        hands = detection_result[0]
+
+    if isinstance(hands, dict):
+        return hands
+
+    if isinstance(hands, (list, tuple)) and hands:
+        first = hands[0]
+        if isinstance(first, dict):
+            return first
+        if isinstance(first, (list, tuple)) and first and isinstance(first[0], dict):
+            return first[0]
+
+    return None
+
 # Function to check if palm is shown (to add character to sentence)
 def check_palm_gesture(pts):
     # Check if all fingers are extended (palm is open and facing camera)
@@ -106,24 +135,35 @@ def predict_sign(image_data):
             "suggestions": [word1, word2, word3, word4]
         }
         
-        if hands and hands[0]:
-            hand = hands[0]
-            hand_map = hand[0]
+        hand_map = get_first_hand(hands)
+
+        if hand_map:
             x, y, w, h = hand_map['bbox']
+
+            x1 = max(0, x - offset)
+            y1 = max(0, y - offset)
+            x2 = min(cv2image.shape[1], x + w + offset)
+            y2 = min(cv2image.shape[0], y + h + offset)
             
             # Extract hand region
-            image = cv2image[y - offset:y + h + offset, x - offset:x + w + offset]
+            image = cv2image[y1:y2, x1:x2]
             
             # Load white background
             white = cv2.imread("white.jpg")
+            if white is None:
+                white = np.ones((400, 400, 3), dtype=np.uint8) * 255
+            elif white.shape[:2] != (400, 400):
+                white = cv2.resize(white, (400, 400))
             
             if image.size > 0:
                 handz = hd2.findHands(image, draw=False, flipType=True)
                 
-                if handz and handz[0]:
-                    hand = handz[0]
-                    hand_map = hand[0]
-                    pts = hand_map['lmList']
+                hand_map = get_first_hand(handz)
+
+                if hand_map:
+                    pts = hand_map.get('lmList', [])
+                    if len(pts) < 21:
+                        return result
                     
                     # Calculate offsets for drawing
                     os_x = ((400 - w) // 2) - 15
@@ -198,9 +238,11 @@ def predict_sign(image_data):
                         ed = len(str_text)
                         word = str_text[st+1:ed]
                         
-                        if len(word.strip()) != 0:
-                            ddd.check(word)
-                            suggestions = ddd.suggest(word)
+                        if len(word.strip()) != 0 and ddd is not None:
+                            try:
+                                suggestions = ddd.suggest(word)
+                            except Exception:
+                                suggestions = []
                             lenn = len(suggestions)
                             
                             word1 = suggestions[0] if lenn >= 1 else " "
@@ -209,6 +251,7 @@ def predict_sign(image_data):
                             word4 = suggestions[3] if lenn >= 4 else " "
                         else:
                             word1 = word2 = word3 = word4 = " "
+
                     
                     # Encode the processed image to send back
                     _, buffer = cv2.imencode('.jpg', white)
@@ -338,7 +381,7 @@ def process_prediction(white_img, pts):
             if pts[8][1] < pts[5][1] and pts[12][1] > pts[9][1] and pts[16][1] > pts[13][1] and pts[20][1] > pts[17][1]:
                 ch1 = 'next'
             else:
-                ch1 = 'next'
+                ch1 = 'L'
         elif ch1 == 5:
             # Group 5 - [P, Q, Z]
             if pts[4][0] > pts[12][0] and pts[4][0] > pts[16][0] and pts[4][0] > pts[20][0]:
@@ -346,8 +389,8 @@ def process_prediction(white_img, pts):
                     ch1 = 'Z'
                 else:
                     ch1 = 'Q'
-            # else:
-            #     ch1 = 'P'
+            else:
+                ch1 = 'P'
         elif ch1 == 6:
             # Group 6 - [X]
             ch1 = 'X'

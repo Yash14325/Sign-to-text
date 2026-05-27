@@ -1,7 +1,7 @@
 flask==2.3.3
 numpy==1.24.3
 opencv-python==4.8.0.76
-mediapipe==0.10.3
+mediapipe==0.10.35
 pyttsx3==2.90
 tensorflow==2.13.0
 cvzone==1.5.6
